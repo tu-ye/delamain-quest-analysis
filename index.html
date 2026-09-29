@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0d12">
+  <meta name="description" content="德拉曼任务拆解交互画布原型">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0d12'/%3E%3Cpath d='M18 15h18c10 0 16 7 16 17S46 49 36 49H18V15Zm9 9v16h8c5 0 8-3 8-8s-3-8-8-8h-8Z' fill='%23f1c75b'/%3E%3C/svg%3E">
+  <title>德拉曼任务拆解 · 交互画布</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="阶段导航">
+      <div class="brand">
+        <div>
+          <p class="eyebrow">QUEST BREAKDOWN</p>
+          <h1>德拉曼任务拆解</h1>
+        </div>
+      </div>
+
+      <div class="prototype-note">
+        <span class="status-dot"></span>
+        <div>
+          <strong>图文完整版</strong>
+          <small>含场景参考图</small>
+        </div>
+      </div>
+
+      <nav class="stage-nav" id="stage-nav">
+        <button class="nav-item is-active" data-view="overview">
+          <span class="nav-code">00</span><span>全局总览</span>
+        </button>
+
+        <p class="nav-section">任务开端</p>
+        <button class="nav-item" data-view="stage1"><span class="nav-code">01</span><span>车库事故</span></button>
+        <button class="nav-item" data-view="stage2"><span class="nav-code">02</span><span>总部理赔</span></button>
+        <button class="nav-item" data-view="stage3"><span class="nav-code">03</span><span>接受委托</span></button>
+
+        <p class="nav-section">失联车辆</p>
+        <button class="nav-item" data-view="stage4"><span class="nav-code">04</span><span>寻找失联车辆</span></button>
+        <div class="substage-grid">
+          <button class="nav-item sub" data-view="stage4a"><span class="nav-code">4A</span><span>北橡区</span></button>
+          <button class="nav-item sub" data-view="stage4b"><span class="nav-code">4B</span><span>谷地区</span></button>
+          <button class="nav-item sub" data-view="stage4c"><span class="nav-code">4C</span><span>美泉区</span></button>
+          <button class="nav-item sub" data-view="stage4d"><span class="nav-code">4D</span><span>海景区</span></button>
+          <button class="nav-item sub" data-view="stage4e"><span class="nav-code">4E</span><span>科罗纳多</span></button>
+          <button class="nav-item sub" data-view="stage4f"><span class="nav-code">4F</span><span>恶土</span></button>
+          <button class="nav-item sub" data-view="stage4g"><span class="nav-code">4G</span><span>北区</span></button>
+        </div>
+
+        <p class="nav-section">总部终局</p>
+        <button class="nav-item" data-view="stage5"><span class="nav-code">05</span><span>返回总部</span></button>
+        <button class="nav-item" data-view="stage6"><span class="nav-code">06</span><span>寻找入口</span></button>
+        <button class="nav-item" data-view="stage7"><span class="nav-code">07</span><span>解除门禁</span></button>
+        <button class="nav-item" data-view="stage8"><span class="nav-code">08</span><span>维修车间</span></button>
+        <button class="nav-item" data-view="stage9"><span class="nav-code">09</span><span>最终选择</span></button>
+      </nav>
+
+      <div class="source-note">
+        <p>视频参考：Bilibili <a href="https://www.bilibili.com/video/BV1JUML6NEjt" target="_blank" rel="noopener noreferrer">BV1JUML6NEjt</a>「游戏观测员洛可」（UID：519962938）</p>
+        <p>视频截图使用已征得作者同意。</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <kbd>拖拽</kbd><span>移动</span>
+        <kbd>滚轮</kbd><span>缩放</span>
+        <kbd>0</kbd><span>总览</span>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="toolbar">
+        <button class="icon-button mobile-only" id="menu-button" aria-label="打开阶段导航">☰</button>
+        <div class="location">
+          <span class="location-label">当前视图</span>
+          <strong id="view-title">全局总览</strong>
+        </div>
+        <div class="toolbar-actions">
+          <button class="tool-button" id="zoom-out" aria-label="缩小">−</button>
+          <output class="zoom-readout" id="zoom-readout">100%</output>
+          <button class="tool-button" id="zoom-in" aria-label="放大">＋</button>
+          <button class="text-button" id="fit-button">适合画布</button>
+          <button class="tool-button" id="fullscreen-button" aria-label="全屏">⛶</button>
+        </div>
+      </header>
+
+      <div class="viewport" id="viewport" tabindex="0" aria-label="德拉曼任务拆解画布，可拖拽和缩放">
+        <div class="canvas" id="canvas">
+          <div id="map-svg" class="map-svg" role="img" aria-label="德拉曼任务完整拆解流程图"></div>
+        </div>
+
+        <div class="loading-panel" id="loading-panel" role="status">
+          <span class="loader"></span>
+          <div><strong>正在载入任务图谱</strong><small>大画布首次解析可能需要几秒</small></div>
+        </div>
+
+        <div class="canvas-hint" id="canvas-hint">拖动画布 · 滚轮缩放 · 双击放大</div>
+
+        <aside class="map-legend" aria-label="流程图图例">
+          <div class="legend-heading">图例</div>
+          <div class="legend-list">
+            <div class="legend-row"><span class="legend-shape choice"></span><span>选择</span></div>
+            <div class="legend-row"><span class="legend-shape info"></span><span>信息</span></div>
+            <div class="legend-row"><span class="legend-shape action"></span><span>玩家行为</span></div>
+            <div class="legend-row"><span class="legend-shape battle"></span><span>战斗</span></div>
+            <div class="legend-row"><span class="legend-shape script"></span><span>演出 / 脚本事件</span></div>
+            <div class="legend-row"><span class="legend-shape dialogue"></span><span>对话</span></div>
+            <div class="legend-row"><span class="legend-shape objective"></span><span>任务目标更新</span></div>
+          </div>
+        </aside>
+
+        <div class="minimap" id="minimap" aria-label="画布导航缩略图">
+          <div class="minimap-schematic" aria-label="阶段导航">
+            <span class="mini-connector mini-connector-main"></span>
+            <span class="mini-connector mini-connector-branch"></span>
+            <button class="mini-stage" data-view="stage1" style="--mx:0%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 1"></button>
+            <button class="mini-stage" data-view="stage2" style="--mx:11.2%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 2"></button>
+            <button class="mini-stage" data-view="stage3" style="--mx:20.8%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 3"></button>
+            <button class="mini-stage" data-view="stage4" style="--mx:29.9%;--my:41%;--mw:6.3%;--mh:17.6%" aria-label="Stage 4"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4a" style="--mx:40.6%;--my:0%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4A"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4b" style="--mx:40.6%;--my:14.5%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4B"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4c" style="--mx:40.6%;--my:28.9%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4C"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4d" style="--mx:40.6%;--my:43.4%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4D"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4e" style="--mx:40.6%;--my:58.2%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4E"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4f" style="--mx:40.6%;--my:72.8%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4F"></button>
+            <button class="mini-stage mini-stage-sub" data-view="stage4g" style="--mx:40.6%;--my:87.1%;--mw:6.3%;--mh:12.8%" aria-label="Stage 4G"></button>
+            <button class="mini-stage" data-view="stage5" style="--mx:50.8%;--my:41%;--mw:6.3%;--mh:17.6%" aria-label="Stage 5"></button>
+            <button class="mini-stage" data-view="stage6" style="--mx:65.7%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 6"></button>
+            <button class="mini-stage" data-view="stage7" style="--mx:75%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 7"></button>
+            <button class="mini-stage" data-view="stage8" style="--mx:84.4%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 8"></button>
+            <button class="mini-stage" data-view="stage9" style="--mx:93.7%;--my:38.6%;--mw:6.3%;--mh:22.4%" aria-label="Stage 9"></button>
+          </div>
+          <div class="minimap-window" id="minimap-window"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="sidebar-scrim" id="sidebar-scrim"></div>
+  <script src="app.js"></script>
+</body>
+</html>
